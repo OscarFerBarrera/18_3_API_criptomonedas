@@ -1,0 +1,33 @@
+{
+  "name": "18_3_api_criptomonedas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "seed:cryptoList": "node ./seeds/cryptoList.seed.js",
+    "start": "node --watch index.js",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OscarFerBarrera/18_3_API_criptomonedas.git"
+  },
+  "author": "Oscar Barrera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OscarFerBarrera/18_3_API_criptomonedas/issues"
+  },
+  "homepage": "https://github.com/OscarFerBarrera/18_3_API_criptomonedas#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "mongoose": "^8.2.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "husky": "^9.0.11"
+  }
+}
