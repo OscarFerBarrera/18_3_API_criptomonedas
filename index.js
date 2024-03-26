@@ -1,3 +1,4 @@
+// Configuración del server
 const express = require("express");
 const { cryptoRouter } = require("./routes/crypto.routes.js");
 
@@ -5,17 +6,19 @@ const { cryptoRouter } = require("./routes/crypto.routes.js");
 const { connect } = require("./db.js");
 connect();
 
-// Configuración del server
+// Configuracion del server
 const PORT = 3000;
 const server = express();
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
-// Rutas
+// configurar routers
 const router = express.Router();
+// Ruta home
 router.get("/", (req, res) => {
   res.send("Esta es la home de nuestra API crypto monedas");
 });
+// Manejo de cualquier ruta que no este definida
 router.get("*", (req, res) => {
   res.status(404).send("Lo sentimos :( No hemos encontrado la página solicitada.");
 });

@@ -1,30 +1,29 @@
-const express = require("express");
-
 // Modelos
-const { Cryptos } = require("../models/Crypto.js");
+const { Crypto } = require("../models/Crypto.js");
 
 // Router propio
+const express = require("express");
 const router = express.Router();
 
 // CRUD: READ
-// EJEMPLO DE REQ: http://localhost:3000/user?page=1&limit=10
-router.get("/cripto", async (req, res) => {
+// EJEMPLO DE REQ: http://localhost:3000/crypto?page=1&limit=10
+router.get("/", async (req, res) => {
   try {
     // Asi leemos query params
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
-    const crypto = await Cryptos.find()
+    const cryptos = await Crypto.find()
       .limit(limit)
       .skip((page - 1) * limit);
 
     // Num total de elementos
-    const totalElements = await Cryptos.countDocuments();
+    const totalElements = await Crypto.countDocuments();
 
     const response = {
       totalItems: totalElements,
       totalPages: Math.ceil(totalElements / limit),
       currentPage: page,
-      data: crypto,
+      data: cryptos,
     };
 
     res.json(response);
@@ -33,11 +32,11 @@ router.get("/cripto", async (req, res) => {
   }
 });
 
-// CRUD: READ
+// CRUD: READ optener un solo dato de cryptomoneda
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const crypto = await Cryptos.findById(id);
+    const crypto = await Crypto.findById(id);
     if (crypto) {
       res.json(crypto);
     } else {
@@ -51,9 +50,8 @@ router.get("/:id", async (req, res) => {
 // CRUD: Operación custom, no es CRUD
 router.get("/name/:name", async (req, res) => {
   const name = req.params.name;
-
   try {
-    const crypto = await Cryptos.find({ firstName: new RegExp("^" + name.toLowerCase(), "i") });
+    const crypto = await Crypto.find({ name: new RegExp("^" + name.toLowerCase(), "i") });
     if (crypto?.length) {
       res.json(crypto);
     } else {
@@ -64,8 +62,7 @@ router.get("/name/:name", async (req, res) => {
   }
 });
 
-// Endpoint de creación de cryptos
-// CRUD: CREATE
+// CRUD: CREATE Endpoint de creación de cryptos
 router.post("/", async (req, res) => {
   try {
     const crypto = new Crypto({
@@ -82,14 +79,13 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Para elimnar cryptos
-// CRUD: DELETE
-router.delete("/:id", async (req, res) => {
+// CRUD: UPDATE
+router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const cryptoDeleted = await Cryptos.findByIdAndDelete(id);
-    if (cryptoDeleted) {
-      res.json(cryptoDeleted);
+    const cryptoUpdated = await Crypto.findByIdAndUpdate(id, req.body, { new: true });
+    if (cryptoUpdated) {
+      res.json(cryptoUpdated);
     } else {
       res.status(404).json({});
     }
@@ -98,13 +94,13 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// CRUD: UPDATE
-router.put("/:id", async (req, res) => {
+// CRUD: DELETE eliminar cryptos
+router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const cryptoUpdated = await Cryptos.findByIdAndUpdate(id, req.body, { new: true });
-    if (cryptoUpdated) {
-      res.json(cryptoUpdated);
+    const cryptoDeleted = await Crypto.findByIdAndDelete(id);
+    if (cryptoDeleted) {
+      res.json(cryptoDeleted);
     } else {
       res.status(404).json({});
     }
