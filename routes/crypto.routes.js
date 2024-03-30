@@ -5,6 +5,38 @@ const { Crypto } = require("../models/Crypto.js");
 const express = require("express");
 const router = express.Router();
 
+const convertJsonToCsv = (jsonData) => {
+  let csv = "";
+
+  // Encabezados
+  const firstItemInJson = jsonData[0];
+  const headers = Object.keys(firstItemInJson);
+  csv = csv + headers.join(";") + "; \n";
+
+  // Datos- Recorremos cada fila
+  jsonData.forEach((item) => {
+    // Dentro de cada fila recorremos todas las propiedades
+    headers.forEach((header) => {
+      csv = csv + item[header] + ";";
+    });
+    csv = csv + "\n";
+  });
+
+  return csv;
+};
+
+router.get("/csv", async (req, res) => {
+  try {
+    const cryptos = await Crypto.find()
+    console.log(cryptos)
+    const csv = await convertJsonToCsv(cryptos);
+    console.log(csv)
+    res.status(200).send(csv);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // CRUD: READ
 // EJEMPLO DE REQ: http://localhost:3000/crypto?page=1&limit=10
 router.get("/", async (req, res) => {
